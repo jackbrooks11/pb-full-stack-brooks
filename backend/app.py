@@ -1,21 +1,24 @@
+import os
 from flask import Flask
+from database import db
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 from config import Config
+from app.models.whale_sighting import WhaleSighting
 
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config())
+    db.init_app(app)
+    return app 
 
-db = SQLAlchemy(app)
-
-@app.route('/')
-def test_db():
-    try:
-        db.session.execute(text('SELECT 1'))
-        return 'Database connection successful!'
-    except SQLAlchemyError as e:
-        return f'Database connection failed: {str(e)}'
+def setup_database(app):    
+    with app.app_context():
+        db.create_all()
 
 if __name__ == '__main__':
+    app = create_app()
+    # Because this is just a demonstration, we set up the database like this.
+    setup_database(app)
     app.run()
