@@ -1,11 +1,11 @@
 import os
 from flask import Flask
 from database import db
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import text
-from sqlalchemy.exc import SQLAlchemyError
 from config import Config
 from app.models import WhaleSighting
+import requests
+
+app_root = os.path.dirname(os.path.abspath(__file__))
 
 def create_app():
     app = Flask(__name__)
@@ -16,7 +16,31 @@ def create_app():
 def setup_database(app):    
     with app.app_context():
         db.create_all()
+        seed()
 
+def seed():
+    # Check if any sightings exist in the database
+    if WhaleSighting.query.first() is None:
+        try:
+            # Retrieve data from the URL
+            url = "https://geo.pointblue.org/whale-map/full_stack_excercise.php?timestamp=1"
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an exception for any HTTP errors
+            # Process data
+            data = response.json()
+            for sighting in data:
+                whale_sighting = WhaleSighting(sighting)
+                db.session.add(whale_sighting)
+            
+            db.session.commit()
+            print("Sightings added to the database.")
+        
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Failed to retrieve data from {url}: {str(e)}")
+        
+        except Exception as e:
+            raise Exception(f"An unexpected error occurred: {str(e)}")
+            
 if __name__ == '__main__':
     app = create_app()
     setup_database(app)
