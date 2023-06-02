@@ -4,8 +4,12 @@ from database import db
 from config import Config
 from app.models import WhaleSighting
 import requests
+from flask_cors import CORS
+from app.routes import routes
 
 app = Flask(__name__)
+app.register_blueprint(routes)
+CORS(app)
 app.config.from_object(Config())
 db.init_app(app)
 
