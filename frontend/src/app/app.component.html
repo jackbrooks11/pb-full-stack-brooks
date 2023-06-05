@@ -1,5 +1,44 @@
-<div *ngFor="let sighting of whaleSightingsList">
-  <h3>{{ sighting.commonname }}</h3>
-  <p>Spotter Project ID: {{ sighting.spotter_project_id }}</p>
-  <p>Spotter Trip ID: {{ sighting.spotter_trip_id }}</p>
+<div>
+  <h1>Whale Observations</h1>
+
+  <div>
+    <div>
+      <div>
+        <div>
+          <label for="year-select">Select Year:</label>
+        </div>
+        <select id="year-select" [(ngModel)]="selectedYear" (change)="onSelectionChange()">
+          <option value="">-- Select Year --</option>
+          <option value="2013">2013</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <!-- Add more options for available years -->
+        </select>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <div>
+          <label for="species-select">Select Species:</label>
+        </div>
+        <select id="species-select" [(ngModel)]="selectedSpecies" (change)="onSelectionChange()">
+          <option value="">-- Select Species --</option>
+          <option value="Unidentified Whale">Unidentified Whale</option>
+          <option value="Dolphin">Dolphin</option>
+          <option value="Seal">Seal</option>
+          <!-- Add more options for available species -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <canvas baseChart
+            [datasets]="chartData"
+            [labels]="chartLabels"
+            [options]="chartOptions"
+            [legend]="chartLegend"
+            [type]="'bar'"></canvas>
+  </div>
 </div>
