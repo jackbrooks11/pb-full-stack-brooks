@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WhaleSightingsApiService } from './whale-sightings/whale-sightings-api.service';
 import { ChartDataset, ChartOptions } from 'chart.js';
+import { WhaleSighting } from './whale-sightings/whale-sighting.model';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,16 @@ export class AppComponent implements OnInit, OnDestroy {
           precision: 0
         }
       }
+    },
+    // Other chart options...
+    plugins: {
+      title: {
+        display: true,
+        text: '',
+        font: {
+          size: 16
+        }
+      }
     }
   };
   chartLegend = true;
@@ -40,12 +51,18 @@ export class AppComponent implements OnInit, OnDestroy {
       this.whaleSightingsApi.getWhaleSightings(this.selectedYear, this.selectedSpecies)
         .subscribe(res => {
           this.showGraph = true;
-          const data = res as any[];
-          console.log(data);
-          const observationCounts = data.map(item => item.observationcount);
+          // Update the chart title
+          if (this.chartOptions.plugins && this.chartOptions.plugins.title) {
+            this.chartOptions.plugins.title.text = `Observation Count for ${this.selectedSpecies} (${this.selectedYear})`;
+          }          var sightings = res as WhaleSighting[];
+          const chart_data = new Array(12).fill(0); // Initialize an array of 12 months with observation count set to 0
+          for (const sighting of sightings) {
+            var month = parseInt(sighting.evt_date.substring(4, 6));
+            chart_data[month - 1] += 1;
+          }
           const months = ['January', 'February', 'March', 'April', 'May', 'June',
             'July', 'August', 'September', 'October', 'November', 'December'];
-          this.chartData = [{ data: observationCounts, label: 'Observation Count' }];
+          this.chartData = [{ data: chart_data, label: 'Observation Count' }];
           this.chartLabels = months;
         });
     } else {
