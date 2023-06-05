@@ -1,4 +1,5 @@
 from http.client import BAD_REQUEST
+import json
 from flask import Blueprint, request
 from app.models import WhaleSighting
 
@@ -15,4 +16,8 @@ def get_sighting_data():
         year = int(year)
     except ValueError:
         return "Year not a number", 400
-    return WhaleSighting.get_sighting(year, species)
+    sightings = WhaleSighting.get_sightings(year, species)
+    sightings_list = []
+    for sighting in sightings:
+        sightings_list.append(sighting.to_dict())
+    return json.dumps(sightings_list)

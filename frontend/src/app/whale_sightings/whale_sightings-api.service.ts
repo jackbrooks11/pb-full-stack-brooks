@@ -13,6 +13,8 @@ export class WhaleSightingsApiService {
 
   // GET list of public, future events
   getWhaleSightings() {
-    return this.http.get(`${API_URL}/get_sighting_data`);
+    const year = 2013;
+    const species = 'Unidentified Whale';
+    return this.http.get(`${API_URL}/get_sighting_data?year=${year}&species=${encodeURIComponent(species)}`);
   }
 }

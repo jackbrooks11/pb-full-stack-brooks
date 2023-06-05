@@ -26,17 +26,17 @@ class TestModels:
         assert whale_sighting.evt_datetime_utc == datetime.fromisoformat("2013-11-26T21:09:43+00:00")
 
     @pytest.mark.parametrize("param", [('1998', 'bluewhale'), (1998, 5), (1998.1, 'bluewhale')])
-    def test_get_sighting_with_invalid_input(self, param):
+    def test_get_sightings_with_invalid_input(self, param):
         with pytest.raises(TypeError):
-            WhaleSighting.get_sighting(param[0], param[1])
+            WhaleSighting.get_sightings(param[0], param[1])
 
     @pytest.mark.parametrize("param", [(1665, 'Unidentified Whale'), (2013, 'randomwhale')])
-    def test_get_sighting_nonexistent_record(self, param):
-        records = WhaleSighting.get_sighting(*param)
+    def test_get_sightings_nonexistent_record(self, param):
+        records = WhaleSighting.get_sightings(*param)
         assert records == []
 
-    def test_get_sighting_existing_record(self):
-        records = WhaleSighting.get_sighting(2013, 'Unidentified Whale')
+    def test_get_sightings_existing_record(self):
+        records = WhaleSighting.get_sightings(2013, 'Unidentified Whale')
         assert isinstance(records, list)
         assert all(isinstance(record, WhaleSighting) for record in records)
         assert hasattr(records[0], 'distance')

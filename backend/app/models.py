@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
 
@@ -43,10 +44,33 @@ class WhaleSighting(db.Model):
         self.corrected_latitude = data.get('corrected_latitude')
         self.corrected_longitude = data.get('corrected_longitude')
 
+    def to_dict(self):
+        sighting_dict = {
+            'id': self.id,
+            'spotter_project_id': self.spotter_project_id,
+            'spotter_trip_id': self.spotter_trip_id,
+            'evt_date': self.evt_date,
+            'evt_datetime_utc': self.evt_datetime_utc.isoformat(),
+            'vessel': self.vessel,
+            'lat_d': self.lat_d,
+            'long_d': self.long_d,
+            'commonname': self.commonname,
+            'observationcount': self.observationcount,
+            'behavior': self.behavior,
+            'distance': self.distance,
+            'reticle': self.reticle,
+            'bearing': self.bearing,
+            'comments': self.comments,
+            'corrected_latitude': self.corrected_latitude,
+            'corrected_longitude': self.corrected_longitude
+        }
+        return sighting_dict
+    
     @staticmethod
-    def get_sighting(year: int, species: str):
+    def get_sightings(year: int, species: str):
         if not isinstance(year, int) or not isinstance(species, str):
             raise TypeError("Year must be an integer and species must be a str")
         sightings = WhaleSighting.query.filter(and_(WhaleSighting.evt_date.startswith(str(year)),
-                                                WhaleSighting.commonname == species)).all()
+                                                    WhaleSighting.commonname == species)) \
+                                                    .all()
         return sightings

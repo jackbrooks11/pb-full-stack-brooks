@@ -4,6 +4,7 @@ from unittest.mock import patch
 import sys
 sys.path.append('../')
 from app import create_app
+from app.models import WhaleSighting
 from app.routes import get_sighting_data
 
 app = create_app()
@@ -33,9 +34,14 @@ class TestRoutes:
 
         assert resp.status_code == 400
 
-    @patch('app.models.WhaleSighting.get_sighting')
-    def test_get_sighting_data_existing_data(self, mock_get_sighting, client):
-        mock_get_sighting.return_value = ['mocked_sighting1', 'mocked_sighting2']
+    @patch('app.models.WhaleSighting.get_sightings')
+    def test_get_sighting_data_existing_data(self, mock_get_sightings, client):
+        json_str = '[{"spotter_project_id":3,"spotter_trip_id":204,"evt_date":"20131126","evt_datetime_utc":"2013-11-26T21:14:29+00:00","vessel":"Lighthouse Hill","lat_d":37.683406857798,"long_d":-123.03782066012,"commonname":"Humpback Whale","observationcount":2,"behavior":null,"distance":"3611.7165040668","reticle":4.00,"bearing":241,"comments":"Jim","corrected_latitude":37.68246,"corrected_longitude":-123.026598}, \
+                    {"spotter_project_id":3,"spotter_trip_id":204,"evt_date":"20131126","evt_datetime_utc":"2013-11-26T20:40:24+00:00","vessel":"Lighthouse Hill","lat_d":37.68861195765,"long_d":-123.05164335385,"commonname":"Unidentified Whale","observationcount":1,"behavior":null,"distance":"4528.4481315453","reticle":3.00,"bearing":255,"comments":"Jim","corrected_latitude":37.68798,"corrected_longitude":-123.036458}]'
+
+        data = json.loads(json_str)[0]
+        data2 = json.loads(json_str)[1]
+        mock_get_sightings.return_value = [WhaleSighting(data), WhaleSighting(data2)]
         
         query_params = {
             'year': 2023,
@@ -43,5 +49,5 @@ class TestRoutes:
         }
         resp = client.get('/get_sighting_data', query_string=query_params)
         assert resp.status == '200 OK'
-        assert json.loads(resp.data.decode('utf-8')) == ['mocked_sighting1', 'mocked_sighting2']
-        mock_get_sighting.assert_called_once_with(2023, 'whale')
+        assert len(json.loads(resp.data)) == 2
+        mock_get_sightings.assert_called_once_with(2023, 'whale')
