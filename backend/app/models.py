@@ -1,6 +1,8 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from database import db
+from sqlalchemy import and_
+
+db = SQLAlchemy()
 
 class WhaleSighting(db.Model):
     __tablename__ = 'whale_sightings'
@@ -40,3 +42,11 @@ class WhaleSighting(db.Model):
         self.comments = data.get('comments')
         self.corrected_latitude = data.get('corrected_latitude')
         self.corrected_longitude = data.get('corrected_longitude')
+
+    @staticmethod
+    def get_sighting(year: int, species: str):
+        if not isinstance(year, int) or not isinstance(species, str):
+            raise TypeError("Year must be an integer and species must be a str")
+        sightings = WhaleSighting.query.filter(and_(WhaleSighting.evt_date.startswith(str(year)),
+                                                WhaleSighting.commonname == species)).all()
+        return sightings

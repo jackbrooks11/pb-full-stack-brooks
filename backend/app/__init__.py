@@ -1,17 +1,20 @@
-import os
 from flask import Flask
-from database import db
+from flask_sqlalchemy import SQLAlchemy
+import sys
+sys.path.append('../')
 from config import Config
-from app.models import WhaleSighting
+from app.models import db, WhaleSighting
 import requests
 from flask_cors import CORS
 from app.routes import routes
 
-app = Flask(__name__)
-app.register_blueprint(routes)
-CORS(app)
-app.config.from_object(Config())
-db.init_app(app)
+def create_app(config=Config()):
+    app = Flask(__name__)
+    app.config.from_object(config)
+    app.register_blueprint(routes)
+    CORS(app)
+    db.init_app(app)
+    return app
 
 def setup_database(app):    
     with app.app_context():
@@ -20,7 +23,7 @@ def setup_database(app):
 
 def seed():
     # Check if any sightings exist in the database
-    if WhaleSighting.query.first() is None:
+    if db.session.query(WhaleSighting).first() is None:
         try:
             # Retrieve data from the URL
             url = "https://geo.pointblue.org/whale-map/full_stack_excercise.php?timestamp=1"

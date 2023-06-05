@@ -1,8 +1,18 @@
-from flask import Blueprint
+from http.client import BAD_REQUEST
+from flask import Blueprint, request
+from app.models import WhaleSighting
 
 routes = Blueprint("routes", __name__)
 
 # Define the GET route
 @routes.route('/get_sighting_data', methods=['GET'])
 def get_sighting_data():
-    return "This is a blank GET route"
+    year = request.args.get('year')
+    species = request.args.get('species')
+    if not year or not species:
+        return "Year or species missing", 400
+    try:
+        year = int(year)
+    except ValueError:
+        return "Year not a number", 400
+    return WhaleSighting.get_sighting(year, species)
