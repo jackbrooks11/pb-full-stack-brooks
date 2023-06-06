@@ -31,6 +31,7 @@ The application is built using the following technologies:
 
 ### Set up the database
 Create a PostgreSQL database and update the DATABASE_URL with your database connection details
+
 `export DATABASE_URL="postgresql://<username>:<password>@<host>:<port>/<dbname>"`
 
 ### Start the backend server
@@ -39,6 +40,7 @@ Create a PostgreSQL database and update the DATABASE_URL with your database conn
 ### Set up the frontend
 
 Open a new terminal window and navigate to the frontend directory
+
 `cd ../frontend`
 `npm install`
 
