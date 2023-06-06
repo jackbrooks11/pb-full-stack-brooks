@@ -1,13 +1,13 @@
-<div>
-  <h1>Whale Observations</h1>
+<div class="container">
+  <h1 class="title">Whale Observation Tracker</h1>
 
-  <div>
-    <div>
-      <div>
-        <div>
-          <label for="year-select">Select Year:</label>
+  <div class="row controls">
+    <div class="col-md-6">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="year-select">Select Year:</label>
         </div>
-        <select id="year-select" [(ngModel)]="selectedYear" (change)="onSelectionChange()">
+        <select id="year-select" class="form-control" [(ngModel)]="selectedYear" (change)="onSelectionChange()">
           <option value="">-- Select Year --</option>
           <option value="2013">2013</option>
           <option value="2020">2020</option>
@@ -17,12 +17,12 @@
       </div>
     </div>
 
-    <div>
-      <div>
-        <div>
-          <label for="species-select">Select Species:</label>
+    <div class="col-md-6">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <label class="input-group-text" for="species-select">Select Species:</label>
         </div>
-        <select id="species-select" [(ngModel)]="selectedSpecies" (change)="onSelectionChange()">
+        <select id="species-select" class="form-control" [(ngModel)]="selectedSpecies" (change)="onSelectionChange()">
           <option value="">-- Select Species --</option>
           <option value="Unidentified Whale">Unidentified Whale</option>
           <option value="Dolphin">Dolphin</option>
@@ -32,8 +32,8 @@
       </div>
     </div>
   </div>
-
-  <div>
+  <br>
+  <div class="graph">
     <canvas baseChart
             [datasets]="chartData"
             [labels]="chartLabels"
