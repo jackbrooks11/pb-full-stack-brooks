@@ -10,4 +10,14 @@ export class WhaleSightingsApiService {
   getWhaleSightings(year: number, species: string): Observable<any> {
     return this.http.get(`${API_URL}/get_sighting_data?year=${year}&species=${encodeURIComponent(species)}`);
   }
+
+  getUniqueYears(): Observable<any> {
+    const url = `${API_URL}/get_unique_years`;
+    return this.http.get(url);
+  }
+
+  getUniqueCommonnames(): Observable<any> {
+    const url = `${API_URL}/get_unique_commonnames`;
+    return this.http.get(url);
+  }
 }

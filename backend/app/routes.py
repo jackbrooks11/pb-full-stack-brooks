@@ -1,11 +1,10 @@
-from http.client import BAD_REQUEST
 import json
 from flask import Blueprint, request
 from app.models import WhaleSighting
 
 routes = Blueprint("routes", __name__)
 
-# Define the GET route
+# Define the GET route for sighting data
 @routes.route('/get_sighting_data', methods=['GET'])
 def get_sighting_data():
     year = request.args.get('year')
@@ -21,3 +20,15 @@ def get_sighting_data():
     for sighting in sightings:
         sightings_list.append(sighting.to_dict())
     return json.dumps(sightings_list)
+
+# Define the GET route for unique years
+@routes.route('/get_unique_years', methods=['GET'])
+def get_unique_years():
+    unique_years = WhaleSighting.get_unique_years()
+    return json.dumps(unique_years)
+
+# Define the GET route for unique common names
+@routes.route('/get_unique_commonnames', methods=['GET'])
+def get_unique_commonnames():
+    unique_commonnames = WhaleSighting.get_unique_commonnames()
+    return json.dumps(unique_commonnames)

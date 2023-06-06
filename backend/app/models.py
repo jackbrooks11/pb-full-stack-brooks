@@ -1,7 +1,7 @@
 from datetime import datetime
 import json
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import and_
+from sqlalchemy import and_, func, extract
 
 db = SQLAlchemy()
 
@@ -74,3 +74,23 @@ class WhaleSighting(db.Model):
                                                     WhaleSighting.commonname == species)) \
                                                     .all()
         return sightings
+    
+    @staticmethod
+    def get_unique_years():
+        unique_years = db.session.query(
+            extract('year', WhaleSighting.evt_datetime_utc)
+        ).distinct().order_by(
+            func.extract('year', WhaleSighting.evt_datetime_utc).desc()
+        ).all()
+        print(unique_years)
+        return [str(year[0]) for year in unique_years]
+
+    @staticmethod
+    def get_unique_commonnames():
+        commonnames = db.session.query(
+            WhaleSighting.commonname
+        ).distinct().order_by(
+            WhaleSighting.commonname
+        ).all()
+        unique_commonnames = [commonname[0] for commonname in commonnames]
+        return unique_commonnames
