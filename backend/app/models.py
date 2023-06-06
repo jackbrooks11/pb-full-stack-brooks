@@ -82,7 +82,6 @@ class WhaleSighting(db.Model):
         ).distinct().order_by(
             func.extract('year', WhaleSighting.evt_datetime_utc).desc()
         ).all()
-        print(unique_years)
         return [str(year[0]) for year in unique_years]
 
     @staticmethod

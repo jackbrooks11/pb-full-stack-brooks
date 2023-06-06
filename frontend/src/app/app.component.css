@@ -10,9 +10,9 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
-  color: #333; /* Update the color to a desired cool color */
-  text-transform: uppercase; /* Make the text uppercase for a sleek look */
-  letter-spacing: 2px; /* Add some letter spacing for a modern touch */
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .controls {

@@ -66,7 +66,7 @@ export class AppComponent implements OnInit, OnDestroy {
             const sightings = res;
             const chart_data = new Array(12).fill(0); // Initialize an array of 12 months with observation count set to 0
             for (const sighting of sightings) {
-              const month = parseInt(sighting.evt_date.substring(4, 6));
+              const month = parseInt(sighting.evt_date.substring(4, 6)); // Extract month from evt_date
               chart_data[month - 1] += 1;
             }
             const months = ['January', 'February', 'March', 'April', 'May', 'June',

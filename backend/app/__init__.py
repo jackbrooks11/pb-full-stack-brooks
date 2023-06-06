@@ -14,6 +14,7 @@ def create_app(config=Config()):
     app.register_blueprint(routes)
     CORS(app)
     db.init_app(app)
+    setup_database(app)
     return app
 
 def setup_database(app):    
